@@ -1,26 +1,28 @@
-from config import mongodb_connector
-from envyaml import EnvYAML
-from urllib.error import URLError, HTTPError
 import requests
 import random
 import time
 import csv
 import logging
+import utils
+
+from config.MongoDBConnector import MongoManager
+from urllib.error import URLError, HTTPError
 
 
 class ProductIDSpider:
 
     def __init__(self):
-        self.env = EnvYAML('../config/config.yaml')
+        self.env = utils.getEnv()
         self.api = self.env['api']
         self.sub_menu = self.api['sub-menu']
         self.headers = self.api['headers']
         self.params_sub_menu = self.api['params_product']
         self.product_error = self.env['csv.call_api_error']
+        mongo_manager = MongoManager.getInstance()
+        mongo_manager.connect()
+        self.collection_categories = mongo_manager.get_collection_categories()
+        self.collection_ids = mongo_manager.get_collection_ids()
 
-        mongodb = mongodb_connector.Mongodb()
-        self.collection_categories = mongodb.connect().get_collection(self.env['mongodb.collection.categories'])
-        self.collection_ids = mongodb.connect().get_collection(self.env['mongodb.collection.ids'])
         self.list_ids = []
         logging.debug("Mongodb connected")
 
@@ -76,4 +78,4 @@ class ProductIDSpider:
 
 if __name__ == "__main__":
     product = ProductIDSpider()
-    product.get_category()
+    # product.get_category()

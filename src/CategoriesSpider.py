@@ -2,13 +2,14 @@ import requests
 import logging
 import time
 import csv
-from envyaml import EnvYAML
+import utils
+
 from urllib.error import URLError, HTTPError
-from config import mongodb_connector
+from config.MongoDBConnector import MongoManager
 class CategoriesLinksCrawling:
 
     def __init__(self):
-        self.env = EnvYAML('../config/config.yaml')
+        self.env = utils.getEnv()
         self.api = self.env['api']
         self.menu = self.api['menu']
         self.sub_menu = self.api['sub-menu']
@@ -16,8 +17,9 @@ class CategoriesLinksCrawling:
         self.params = self.api['params']
         self.params_sub_menu = self.api['params_product']
 
-        mongodb = mongodb_connector.Mongodb()
-        self.collection = mongodb.connect().get_collection(self.env['mongodb.collection.categories'])
+        mongo_manager = MongoManager.getInstance()
+        mongo_manager.connect()
+        self.collection = mongo_manager.get_collection_categories()
         logging.debug("Mongodb connected")
         self.list_categories = []
 
