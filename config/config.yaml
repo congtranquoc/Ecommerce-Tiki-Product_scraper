@@ -3,10 +3,11 @@ mongodb:
   host: $DATABASE_HOST
   username: root
   password: $DB_PASSWORD
-  database: Ecommerce
+  database: ecommerce
   collection:
-    products: products
-    categories: Categories
+    ids: product-ids
+    products: products-tiki
+    categories: categories-tiki
 
 mysql:
  host: $DATABASE_HOST
@@ -67,4 +68,5 @@ api:
     page: 1
 
 csv:
-  call_api_error: ../data/api_product_call_error.csv
+  call_api_error: ../data/api_product_ids_call_error.csv
+  call_product_error: ../data/api_product_data_call_error.csv
