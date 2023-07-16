@@ -1,11 +1,14 @@
-import requests
+import csv
 import logging
 import time
-import csv
-import utils
-
 from urllib.error import URLError, HTTPError
+
+import requests
+
+import utils
 from config.MongoDBConnector import MongoManager
+
+
 class CategoriesLinksCrawling:
 
     def __init__(self):
@@ -23,16 +26,16 @@ class CategoriesLinksCrawling:
         logging.debug("Mongodb connected")
         self.list_categories = []
 
-    #Write categories which can not be reques - a exception is occurs
+    # Write categories which can not be reques - a exception is occurs
     def checkpoint_categories(self, url, category):
         with open('../data/category_ids_error.csv', 'a', newline='') as file:
             writer = csv.writer(file)
-            #if csv is empty, the header will be added
+            # if csv is empty, the header will be added
             if file.tell() == 0:
                 writer.writerow(['urlKey, category'])
-            writer.writerow([url,category])
+            writer.writerow([url, category])
 
-    #request the parent categories
+    # request the parent categories
     def menu_craw(self):
         response = requests.get(self.menu, headers=self.headers, params=self.params)
         if response is not None:
@@ -56,8 +59,7 @@ class CategoriesLinksCrawling:
                 self.list_categories.clear()
                 print("Categries have been ínserted")
 
-
-    #request the child categories
+    # request the child categories
     def sub_menu_craw(self, url, category_id):
         try:
             self.params_sub_menu['category'] = category_id

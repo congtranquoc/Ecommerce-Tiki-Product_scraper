@@ -1,10 +1,10 @@
 import csv
 import os
-import pandas as pd
-import json
-import utils
-import matplotlib.pyplot as plt
 
+import matplotlib.pyplot as plt
+import pandas as pd
+
+import utils
 from config.MongoDBConnector import MongoManager
 from config.MySQLConnector import MysqlManager
 
@@ -36,7 +36,7 @@ class StaticData:
             for origin, count in zip(origins, counts):
                 writer.writerow([origin, count])  # Ghi dữ liệu từng dòng
 
-    def store_product_ingredients(self,product_name,ingredient):
+    def store_product_ingredients(self, product_name, ingredient):
         with open(self.env["csv.product_ingredient"], mode="w", newline="", encoding="utf-8") as file:
             writer = csv.DictWriter(file, fieldnames=["product_name", "ingredient"])
             writer.writeheader()
@@ -135,9 +135,9 @@ class StaticData:
         df = pd.read_csv(self.env["csv.product_ingredient"])
         print(df)
 
+
 if __name__ == "__main__":
     static_data = StaticData()
     static_data.visual_category()
     static_data.visual_origin()
     static_data.visual_product_ingredient()
-

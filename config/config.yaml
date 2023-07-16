@@ -10,46 +10,56 @@ mongodb:
     categories: categories-tiki
 
 mysql:
- host: $DATABASE_HOST
- username: root
- password: $DB_PASSWORD
- database: tiki_db
- table:
-   products: tiki_product_data
- query:
-  INSERT_PRODUCT: |
-    INSERT INTO tiki_product_data (id, product_name, short_description, url, description, rating, sold_quantity, price, category_id, day_ago_created)
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s, %s)
+  host: $DATABASE_HOST
+  username: root
+  password: $DB_PASSWORD
+  database: tiki_db
+  table:
+    products: tiki_product_data
+  query:
+    INSERT_PRODUCT: |
+      INSERT INTO tiki_product_data (id, product_name, short_description, url, description, rating, sold_quantity, price, category_id, day_ago_created)
+      VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+      ON DUPLICATE KEY UPDATE
+          product_name = VALUES(product_name),
+          short_description = VALUES(short_description),
+          url = VALUES(url),
+          description = VALUES(description),
+          rating = VALUES(rating),
+          sold_quantity = VALUES(sold_quantity),
+          price = VALUES(price),
+          category_id = VALUES(category_id),
+          day_ago_created = VALUES(day_ago_created);
 
-  USE_DATABASE: |-
-    USE {database}
+    USE_DATABASE: |-
+      USE {database}
 
-  SHOW_DATABASE: |-
-    SHOW DATABASES
+    SHOW_DATABASE: |-
+      SHOW DATABASES
 
-  CREATE_DATABASE: |-
-    CREATE DATABASE {database}
+    CREATE_DATABASE: |-
+      CREATE DATABASE {database}
 
-  SHOW_TABLE: |-
-    SHOW TABLES
+    SHOW_TABLE: |-
+      SHOW TABLES
 
-  CREATE_TABLE: |-
-    CREATE TABLE tiki_product_data (
-      id BIGINT PRIMARY KEY,
-      product_name LONGTEXT,
-      short_description LONGTEXT,
-      description LONGTEXT,
-      url LONGTEXT,
-      rating DECIMAL(4, 2),
-      sold_quantity BIGINT,
-      price DECIMAL(30, 2),
-      category_id VARCHAR(100),
-      day_ago_created VARCHAR(100)
-    )
-  QUERY_INGREDIENT: |-
-    SELECT product_name, description
-    FROM {table}
-    WHERE description LIKE '%thành phần%'
+    CREATE_TABLE: |-
+      CREATE TABLE tiki_product_data (
+        id BIGINT PRIMARY KEY,
+        product_name LONGTEXT,
+        short_description LONGTEXT,
+        description LONGTEXT,
+        url LONGTEXT,
+        rating DECIMAL(4, 2),
+        sold_quantity BIGINT,
+        price DECIMAL(30, 2),
+        category_id VARCHAR(100),
+        day_ago_created VARCHAR(100)
+      )
+    QUERY_INGREDIENT: |-
+      SELECT product_name, description
+      FROM {table}
+      WHERE description LIKE '%thành phần%'
 api:
   menu: https://api.tiki.vn/raiden/v2/menu-config?
   sub-menu: https://tiki.vn/api/personalish/v1/blocks/listings?

@@ -1,13 +1,14 @@
-import requests
-import random
-import time
 import csv
 import json
 import logging
-import utils
-
+import random
+import time
 from concurrent.futures import ThreadPoolExecutor
 from urllib.error import URLError, HTTPError
+
+import requests
+
+import utils
 from config.MongoDBConnector import MongoManager
 
 
@@ -80,3 +81,7 @@ class ProductDataSpider:
             print(f"Error opening {pid}")
             self.checkpoint_products(pid)
             time.sleep(3)
+
+if __name__ == "__main__":
+    spider = ProductDataSpider()
+    spider.get_product_ids()

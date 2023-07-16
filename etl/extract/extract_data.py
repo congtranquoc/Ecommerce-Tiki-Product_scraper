@@ -10,7 +10,7 @@ class ExtractDescription:
         short_description = doc.get("short_description", "")
         url = doc.get("short_url", "")
         description = doc.get("description", "")
-        rating = doc.get("rating_average", "")
+        rating = doc.get("rating_average") or 0
         sold_quantity = doc.get("quantity_sold")
         val = 0
         if sold_quantity:

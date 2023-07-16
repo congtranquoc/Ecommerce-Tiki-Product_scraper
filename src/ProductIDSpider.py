@@ -1,12 +1,13 @@
-import requests
-import random
-import time
 import csv
 import logging
-import utils
-
-from config.MongoDBConnector import MongoManager
+import random
+import time
 from urllib.error import URLError, HTTPError
+
+import requests
+
+import utils
+from config.MongoDBConnector import MongoManager
 
 
 class ProductIDSpider:
@@ -35,7 +36,7 @@ class ProductIDSpider:
             writer.writerow([category, page])
 
     def get_category(self):
-        #Query
+        # Query
         results = self.collection_categories.distinct("query_value")
         for item in results:
             self.product_ids_craw(item, 1)
@@ -78,4 +79,4 @@ class ProductIDSpider:
 
 if __name__ == "__main__":
     product = ProductIDSpider()
-    # product.get_category()
+    product.get_category()

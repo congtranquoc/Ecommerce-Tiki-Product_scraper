@@ -1,14 +1,13 @@
+import utils
 from config.MongoDBConnector import MongoManager
 from config.MySQLConnector import MysqlManager
-from envyaml import EnvYAML
 from etl.extract.extract_data import ExtractDescription
-import utils
+from envyaml import EnvYAML
 
 
 class transfrom_data:
 
     def __init__(self):
-        self.env = utils.getEnv()
         # connection database
         self.mongo_manager = MongoManager.getInstance()
         self.mongo_manager.connect()

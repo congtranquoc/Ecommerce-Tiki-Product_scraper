@@ -1,9 +1,11 @@
 import logging
+
 import mysql.connector
+
 import utils
 
-class MysqlManager:
 
+class MysqlManager:
     __instance = None
 
     @staticmethod
@@ -52,7 +54,7 @@ class MysqlManager:
 
     def check_database_exists(self):
         if self.is_connected():
-            self.use_data()
+            # self.use_data()
             # Kiểm tra xem cơ sở dữ liệu có tồn tại trong MySQL hay không
             self.mysql_cursor.execute(self.query["SHOW_DATABASE"])
             databases = self.mysql_cursor.fetchall()
