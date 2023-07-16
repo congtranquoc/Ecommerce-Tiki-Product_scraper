@@ -36,11 +36,12 @@ class StaticData:
             for origin, count in zip(origins, counts):
                 writer.writerow([origin, count])  # Ghi dữ liệu từng dòng
 
-    def store_product_ingredients(self, product_name, ingredient):
+    def store_product_ingredients(self, product_names, ingredients):
         with open(self.env["csv.product_ingredient"], mode="w", newline="", encoding="utf-8") as file:
-            writer = csv.DictWriter(file, fieldnames=["product_name", "ingredient"])
-            writer.writeheader()
-            writer.writerows([product_name, ingredient])
+            writer = csv.writer(file)
+            writer.writerow(["product_name", "ingredient"])
+            for product_name, ingredient in zip(product_names, ingredients):
+                writer.writerow([product_name, ingredient])
 
     def draw_categories_bar_chart(self, df):
         df_sorted = df.sort_values(by='product', ascending=False)
@@ -111,25 +112,23 @@ class StaticData:
         # Kiểm tra xem file tồn tại hay không
         if not os.path.exists(self.env["csv.product_ingredient"]):
             result = self.mysql_manager.get_products_has_ingredient()
-
             # Tạo danh sách dữ liệu
             products = []
             ingredients = []
-            for product_name, description in self.mysql_cursor.fetchall():
+            for product_name, description in result:
                 # Trích xuất thông tin thành phần từ miêu tả
-                ingredients = ""
+                ingredient = ""
                 if description:
                     description = description.replace("\n", "")
                     start_index = description.lower().find("thành phần")
                     if start_index != -1:
                         start_index += len("thành phần")
                         end_index = description.find("\n", start_index)
-                        ingredients = description[start_index:end_index].strip()
+                        ingredient = description[start_index:end_index].strip()
                 products.append(product_name)
-                ingredients.append(ingredients)
+                ingredients.append(ingredient)
 
             # Lưu dữ liệu vào file CSV
-            fieldnames = ["product_name", "ingredient"]
             self.store_product_ingredients(products, ingredients)
 
         df = pd.read_csv(self.env["csv.product_ingredient"])

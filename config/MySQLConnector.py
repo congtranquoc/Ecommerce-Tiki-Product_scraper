@@ -98,6 +98,7 @@ class MysqlManager:
 
     def get_products_has_ingredient(self):
         if self.is_connected():
+            self.use_data()
             sql = self.query["QUERY_INGREDIENT"].format(table=self.table)
             # Use all the SQL you like
             self.mysql_cursor.execute(sql)
